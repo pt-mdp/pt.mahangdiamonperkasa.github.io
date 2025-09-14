@@ -1,18 +1,18 @@
 # PT. Mahang Diamond Perkasa
 
 Website resmi **PT. Mahang Diamond Perkasa**  
-Solusi aplikasi offline untuk masjid dan musholla.
+Solusi aplikasi offline untuk manajemen rumah ibadah 
 
 ---
 
 ## 📌 Tentang Kami
-PT. Mahang Diamond Perkasa adalah perusahaan yang berfokus pada pengembangan solusi teknologi, khususnya aplikasi offline yang dapat membantu pengelolaan administrasi, keuangan, dan kegiatan masjid serta musholla.
+PT. Mahang Diamond Perkasa adalah perusahaan yang berfokus pada pengembangan solusi teknologi, khususnya aplikasi offline yang dapat membantu pengelolaan administrasi, keuangan, dan kegiatan rumah ibadah
 
 ---
 
 ## 🎯 Fitur Utama
 - ✅ Aplikasi offline, tidak memerlukan koneksi internet.
-- ✅ Pencatatan keuangan masjid & musholla.
+- ✅ Pencatatan keuangan rumah ibadah
 - ✅ Jadwal kegiatan ibadah, pengajian, dan acara khusus.
 - ✅ Laporan otomatis dan rapi.
 - ✅ Multi pengguna dengan hak akses berbeda.
@@ -46,5 +46,5 @@ Dilarang memperbanyak atau menggunakan tanpa izin resmi.
 
 ---
 
-**PT. Mahang Diamond Perkasa – Solusi Aplikasi Offline untuk Masjid & Musholla**# pt.mahangdiamonperkasa.github.io
-Website resmi PT.mahang diamond perkasa-solusi aplikasi offline untuk masjid dan mushollah
+**PT. Mahang Diamond Perkasa – Solusi Aplikasi Offline untuk rumah ibadah**# pt.mahangdiamonperkasa.github.io
+Website resmi PT.mahang diamond perkasa-solusi aplikasi offline untuk rumah ibadah
