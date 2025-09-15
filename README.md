@@ -6,7 +6,11 @@ Solusi aplikasi offline untuk manajemen rumah ibadah
 ---
 
 ## 📌 Tentang Kami
-PT. Mahang Diamond Perkasa adalah perusahaan yang berfokus pada pengembangan solusi teknologi, khususnya aplikasi offline yang dapat membantu pengelolaan administrasi, keuangan, dan kegiatan rumah ibadah
+PT. Mahang Diamond Perkasa adalah perusahaan yang berfokus pada pengembangan solusi teknologi, khususnya aplikasi offline yang dapat membantu pengelolaan administrasi, keuangan, dan kegiatan rumah ibadah aplikasi kami dari PT. Mahang Diamond Perkasa – sebuah solusi manajemen rumah ibadah offline.
+Dengan aplikasi ini, pengelolaan keuangan, jadwal ibadah, dan kegiatan pengajian menjadi lebih mudah dan rapi, tanpa perlu koneksi internet.
+Aplikasi ini juga mendukung multi-user dengan hak akses berbeda, sehingga bendahara, admin, dan anggota bisa bekerja sesuai perannya.
+Semua data tersimpan dengan di dukung flaskdisk dan laporan bisa dibuat otomatis dan cepat.
+Singkatnya, aplikasi kami menghadirkan kemudahan, keamanan, dan efisiensi untuk pengelolaan rumah ibadah modern.
 
 ---
 
