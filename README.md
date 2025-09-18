@@ -16,6 +16,16 @@ Singkatnya, aplikasi ini menghadirkan **kemudahan, keamanan, dan efisiensi** bag
 ---
 
 ## 🎯 Fitur Utama
+
+### 🔧 Fitur Lengkap / Roadmap
+- Penyimpanan transaksi permanen menggunakan SQLite
+- Multi-user dengan hak akses berbeda (bendahara, admin, ketua)
+- Backup & restore data lokal
+- Ekspor laporan otomatis (PDF/CSV)
+- ScheduleScreen & StaffScreen lengkap
+- Versi Hackathon: FinanceScreen & HomeScreen siap demo, Schedule & Staff masih placeholder
+
+
 - ✅ Aplikasi **offline**, tidak memerlukan koneksi internet.  
 - ✅ **Pencatatan keuangan** rumah ibadah (pemasukan, pengeluaran, saldo).  
 - ✅ **Jadwal kegiatan** ibadah, pengajian, dan acara khusus.  
