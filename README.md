@@ -17,27 +17,32 @@ Singkatnya, aplikasi ini menghadirkan **kemudahan, keamanan, dan efisiensi** bag
 
 ## 🎯 Fitur Utama
 
-- ✅ Penyimpanan transaksi permanen menggunakan SQLite
-- ✅ Multi-user dengan hak akses berbeda (bendahara, admin, ketua)
-- ✅ Backup & restore data lokal
-- ✅ Ekspor laporan otomatis (PDF/CSV)
-- ✅ ScheduleScreen & StaffScreen lengkap
-- ✅ Versi Hackathon: FinanceScreen & HomeScreen siap demo, Schedule & Staff masih placeholder
-- ✅ Aplikasi offline, tidak memerlukan koneksi internet
-- ✅ Pencatatan keuangan rumah ibadah (pemasukan, pengeluaran, saldo)
-- ✅ Jadwal kegiatan ibadah, pengajian, dan acara khusus
-- ✅ Laporan otomatis yang rapi dan bisa diekspor
-- ✅ Struktur petugas fleksibel sesuai kebutuhan rumah ibadah
-- ✅ Tampilan sederhana & mudah digunakan, cocok untuk semua umur
 
+<h2>🎯 Fitur Utama</h2>
+<pre id="fiturUtama">
+✅ Penyimpanan transaksi permanen menggunakan SQLite
+✅ Multi-user dengan hak akses berbeda (bendahara, admin, ketua)
+✅ Backup & Restore data lokal
+✅ Ekspor laporan otomatis (PDF/CSV)
+✅ ScheduleScreen & StaffScreen lengkap
+✅ Versi Hackathon: FinanceScreen & HomeScreen siap demo, Schedule & Staff masih placeholder
+✅ Aplikasi offline sepenuhnya
+✅ Pencatatan keuangan rumah ibadah
+✅ Jadwal kegiatan ibadah, pengajian, dan acara khusus
+✅ Laporan otomatis yang rapi dan bisa diekspor
+✅ Struktur petugas fleksibel sesuai kebutuhan rumah ibadah
+✅ Tampilan sederhana & mudah digunakan
+</pre>
+<button onclick="copyFitur()">Salin Fitur Utama</button>
 
-- ✅ Aplikasi **offline**, tidak memerlukan koneksi internet.  
-- ✅ **Pencatatan keuangan** rumah ibadah (pemasukan, pengeluaran, saldo).  
-- ✅ **Jadwal kegiatan** ibadah, pengajian, dan acara khusus.  
-- ✅ **Laporan otomatis** yang rapi dan bisa diekspor.  
-- ✅ **Multi pengguna** dengan hak akses berbeda (bendahara, admin, ketua).  
-- ✅ **Struktur petugas** fleksibel sesuai kebutuhan rumah ibadah.  
-- ✅ **Tampilan sederhana & mudah digunakan**, cocok untuk semua umur.
+<script>
+function copyFitur() {
+  const fitur = document.getElementById("fiturUtama").innerText;
+  navigator.clipboard.writeText(fitur).then(() => {
+    alert("Fitur Utama berhasil disalin!");
+  });
+}
+</script>
 
 ---
 
