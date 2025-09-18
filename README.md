@@ -15,8 +15,6 @@ Fitur multi-user dengan hak akses berbeda (bendahara, admin, ketua) memastikan s
 Singkatnya, aplikasi ini menghadirkan **kemudahan, keamanan, dan efisiensi** bagi pengelolaan rumah ibadah modern.
 ---
 
-## 🎯 Fitur Utama
-
 
 <h2>🎯 Fitur Utama</h2>
 <pre id="fiturUtama">
