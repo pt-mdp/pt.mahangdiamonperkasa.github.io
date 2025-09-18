@@ -39,6 +39,17 @@ Singkatnya, aplikasi ini menghadirkan **kemudahan, keamanan, dan efisiensi** bag
 
 ## 📥 Instalasi
 
+## Instalasi
+
+Berikut beberapa tampilan aplikasi (UI/UX):
+
+![Screenshot 1](assets/screenshots/screen1.png)
+![Screenshot 2](assets/screenshots/screen2.png)
+![Screenshot 3](assets/screenshots/screen3.png)
+![Screenshot 4](assets/screenshots/screen4.png)
+![Screenshot 5](assets/screenshots/screen5.png)
+![Screenshot 6](assets/screenshots/screen6.png)
+
 # 📌 pubspec.yaml
 name: novapro
 description: Aplikasi offline manajemen rumah ibadah (NOVAPRO)
