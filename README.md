@@ -6,62 +6,52 @@ Solusi aplikasi offline untuk manajemen rumah ibadah
 ---
 
 ## 📌 Tentang Kami
-PT. Mahang Diamond Perkasa adalah perusahaan yang berfokus pada pengembangan solusi teknologi, khususnya aplikasi offline yang dapat membantu pengelolaan administrasi, keuangan, dan kegiatan rumah ibadah aplikasi kami dari PT. Mahang Diamond Perkasa – sebuah solusi manajemen rumah ibadah offline.
-Dengan aplikasi ini, pengelolaan keuangan, jadwal ibadah, dan kegiatan pengajian menjadi lebih mudah dan rapi, tanpa perlu koneksi internet.
-Aplikasi ini juga mendukung multi-user dengan hak akses berbeda, sehingga bendahara, admin, dan anggota bisa bekerja sesuai perannya.
-Semua data tersimpan dengan di dukung flaskdisk dan laporan bisa dibuat otomatis dan cepat.
-Singkatnya, aplikasi kami menghadirkan kemudahan, keamanan, dan efisiensi untuk pengelolaan rumah ibadah modern.
+PT. Mahang Diamond Perkasa adalah perusahaan yang berfokus pada pengembangan solusi teknologi, khususnya aplikasi offline untuk manajemen rumah ibadah.  
 
+Aplikasi **NovaPro** kami dirancang agar pengelolaan administrasi, keuangan, jadwal ibadah, dan kegiatan pengajian menjadi lebih mudah, rapi, dan **tanpa perlu koneksi internet**.  
+
+Fitur multi-user dengan hak akses berbeda (bendahara, admin, ketua) memastikan setiap petugas bisa bekerja sesuai perannya. Semua data tersimpan aman di perangkat lokal/flashdisk dan laporan dapat dibuat otomatis dengan cepat.  
+
+Singkatnya, aplikasi ini menghadirkan **kemudahan, keamanan, dan efisiensi** bagi pengelolaan rumah ibadah modern.
 ---
 
 ## 🎯 Fitur Utama
-- ✅ Aplikasi offline, tidak memerlukan koneksi internet.
-- ✅ Pencatatan keuangan rumah ibadah
-- ✅ Jadwal kegiatan ibadah, pengajian, dan acara khusus.
-- ✅ Laporan otomatis dan rapi.
-- ✅ Multi pengguna dengan hak akses berbeda.
+- ✅ Aplikasi **offline**, tidak memerlukan koneksi internet.  
+- ✅ **Pencatatan keuangan** rumah ibadah (pemasukan, pengeluaran, saldo).  
+- ✅ **Jadwal kegiatan** ibadah, pengajian, dan acara khusus.  
+- ✅ **Laporan otomatis** yang rapi dan bisa diekspor.  
+- ✅ **Multi pengguna** dengan hak akses berbeda (bendahara, admin, ketua).  
+- ✅ **Struktur petugas** fleksibel sesuai kebutuhan rumah ibadah.  
+- ✅ **Tampilan sederhana & mudah digunakan**, cocok untuk semua umur.
 
 ---
 
 ## 🛠️ Teknologi yang Digunakan
-- HTML, CSS, dan JavaScript untuk antarmuka pengguna.
-- Database lokal untuk penyimpanan data offline.
-- GitHub Pages untuk dokumentasi dan publikasi.
+
+- **Flutter (Dart)** → untuk membangun aplikasi lintas platform (Android, iOS, Desktop).  
+- **SQLite (sqflite package)** → database lokal untuk pencatatan kas & jadwal secara offline.  
+- **Provider** → state management agar aplikasi lebih stabil & mudah dikembangkan.  
+- **Path Provider** → untuk menyimpan dan mengakses file lokal (backup data).  
+- **Material Design** → tampilan antarmuka yang sederhana & modern.  
+- **GitHub & GitHub Pages** → untuk dokumentasi, publikasi, dan kolaborasi tim.
 
 ---
 
 ## 📥 Instalasi
-1. **Download** aplikasi dari link resmi kami.
-2. Ekstrak file `.zip` hasil unduhan.
-3. Jalankan aplikasi dengan membuka file `index.html` di browser.
-novapro/
- ├─ lib/
- │   ├─ main.dart
- │   ├─ screens/
- │   │   ├─ home_screen.dart
- │   │   ├─ finance_screen.dart
- │   │   ├─ schedule_screen.dart
- │   │   └─ staff_screen.dart
- │   ├─ models/
- │   │   ├─ transaction.dart
- │   │   └─ staff.dart
- │   └─ db/
- │       └─ database_helper.dart
- ├─ pubspec.yaml
- └─ README.md
----name: novapro
-description: NOVAPRO - Manajemen Rumah Ibadah (Kas, Jadwal, Struktur, dll.)
+
+# 📌 pubspec.yaml
+name: novapro
+description: Aplikasi offline manajemen rumah ibadah (NOVAPRO)
 publish_to: 'none'
+version: 1.0.0+1
 
 environment:
-  sdk: ">=2.19.0 <4.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  sqflite: ^2.3.0
-  path_provider: ^2.0.15
-  provider: ^6.0.5
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +59,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+// ================== main.dart ==================
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
@@ -92,6 +84,8 @@ class NovaProApp extends StatelessWidget {
     );
   }
 }
+
+// ================== screens/home_screen.dart ==================
 import 'package:flutter/material.dart';
 import 'finance_screen.dart';
 import 'schedule_screen.dart';
@@ -112,21 +106,21 @@ class HomeScreen extends StatelessWidget {
               child: const Text('💰 Manajemen Kas'),
               onPressed: () {
                 Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const FinanceScreen()));
+                    MaterialPageRoute(builder: (_) => const FinanceScreen()));
               },
             ),
             ElevatedButton(
               child: const Text('📅 Jadwal Kegiatan'),
               onPressed: () {
                 Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const ScheduleScreen()));
+                    MaterialPageRoute(builder: (_) => const ScheduleScreen()));
               },
             ),
             ElevatedButton(
               child: const Text('👤 Struktur Petugas'),
               onPressed: () {
                 Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const StaffScreen()));
+                    MaterialPageRoute(builder: (_) => const StaffScreen()));
               },
             ),
           ],
@@ -135,6 +129,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+// ================== screens/finance_screen.dart ==================
 import 'package:flutter/material.dart';
 
 class FinanceScreen extends StatefulWidget {
@@ -155,7 +151,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
       setState(() {
         _transactions.add({
           'desc': _descController.text,
-          'amount': double.parse(_amountController.text),
+          'amount': double.tryParse(_amountController.text) ?? 0,
         });
         _descController.clear();
         _amountController.clear();
@@ -220,18 +216,59 @@ class _FinanceScreenState extends State<FinanceScreen> {
   }
 }
 
-## 📄 Lisensi
-Hak cipta © 2025 PT. Mahang Diamond Perkasa.  
-Dilarang memperbanyak atau menggunakan tanpa izin resmi.
+// ================== screens/schedule_screen.dart ==================
+import 'package:flutter/material.dart';
 
+class ScheduleScreen extends StatelessWidget {
+  const ScheduleScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Jadwal Kegiatan")),
+      body: const Center(
+        child: Text("📅 Fitur Jadwal akan ditambahkan di sini"),
+      ),
+    );
+  }
+}
+
+// ================== screens/staff_screen.dart ==================
+import 'package:flutter/material.dart';
+
+class StaffScreen extends StatelessWidget {
+  const StaffScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Struktur Petugas")),
+      body: const Center(
+        child: Text("👤 Fitur Struktur Petugas akan ditambahkan di sini"),
+      ),
+    );
+  }
+}
+            
+
+## 📄 Lisensi
+MIT License  
+
+Hak Cipta (c) 2025 PT. Mahang Diamond Perkasa  
+
+Dengan ini diizinkan, tanpa biaya, kepada siapa pun yang memperoleh salinan perangkat lunak ini dan file dokumentasi terkait ("Perangkat Lunak"), untuk menggunakan Perangkat Lunak tanpa batasan, termasuk tanpa batasan hak untuk menggunakan, menyalin, mengubah, menggabungkan, menerbitkan, mendistribusikan, mensublisensikan, dan/atau menjual salinan Perangkat Lunak, serta mengizinkan orang yang diberikan Perangkat Lunak untuk melakukannya, dengan syarat berikut:  
+
+Pernyataan hak cipta di atas dan pernyataan izin ini harus disertakan dalam semua salinan atau bagian substansial dari Perangkat Lunak.  
+
+PERANGKAT LUNAK INI DIBERIKAN "SEBAGAIMANA ADANYA", TANPA JAMINAN APA PUN, BAIK TERSURAT MAUPUN TERSIRAT, TERMASUK NAMUN TIDAK TERBATAS PADA JAMINAN DIPERDAGANGKAN, KESESUAIAN UNTUK TUJUAN TERTENTU, DAN BEBAS DARI PELANGGARAN. DALAM KEADAAN APA PUN PENULIS ATAU PEMEGANG HAK CIPTA TIDAK BERTANGGUNG JAWAB ATAS KLAIM, KERUSAKAN, ATAU KEWAJIBAN LAIN, BAIK DALAM TINDAKAN KONTRAK, PERBUATAN MELAWAN HUKUM, ATAU LAINNYA, YANG TIMBUL DARI, KELUAR DARI, ATAU BERHUBUNGAN DENGAN PERANGKAT LUNAK ATAU PENGGUNAAN ATAU HAL-HAL LAIN DALAM PERANGKAT LUNAK.
 ---
+
 
 ## 📞 Kontak
-- 📧 Email: **info@mahangdiamondperkasa.co.id**
-- 🌐 Website: **https://pt.mahangdiamondperkasa.github.io**
-- 📱 WhatsApp: **+62-8xxx-xxxx-xxx**
+- 📧 Email: **info@mahangdiamondperkasa.co.id**  
+- 🌐 Website: **https://pt.mahangdiamondperkasa.github.io**  
+- 📱 WhatsApp: **+62-812-7020-9570**
 
----
 
-**PT. Mahang Diamond Perkasa – Solusi Aplikasi Offline untuk rumah ibadah**# pt.mahangdiamonperkasa.github.io
-Website resmi PT.mahang diamond perkasa-solusi aplikasi offline untuk rumah ibadah
+**PT. Mahang Diamond Perkasa – Solusi Aplikasi Offline untuk Rumah Ibadah**  
+🌐 Website resmi: [pt.mahangdiamondperkasa.github.io](https://pt.mahangdiamondperkasa.github.io)
