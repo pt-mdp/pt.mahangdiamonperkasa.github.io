@@ -63,8 +63,6 @@ function copyFitur() {
 
 ## 📥 Instalasi
 
-## Instalasi
-
 Berikut beberapa tampilan aplikasi (UI/UX):
 
 ![Screenshot 1](assets/screenshots/screen1.png)
