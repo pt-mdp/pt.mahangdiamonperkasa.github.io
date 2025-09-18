@@ -298,7 +298,7 @@ PERANGKAT LUNAK INI DIBERIKAN "SEBAGAIMANA ADANYA", TANPA JAMINAN APA PUN, BAIK 
 
 
 ## 📞 Kontak
-- 📧 Email: **info@mahangdiamondperkasa.co.id**  
+- 📧 Email: pt.mahangdiamondperkasa@gmail.com 
 - 🌐 Website: **https://pt.mahangdiamondperkasa.github.io**  
 - 📱 WhatsApp: **+62-812-7020-9570**
 
