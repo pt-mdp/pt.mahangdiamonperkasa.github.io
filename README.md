@@ -17,13 +17,18 @@ Singkatnya, aplikasi ini menghadirkan **kemudahan, keamanan, dan efisiensi** bag
 
 ## 🎯 Fitur Utama
 
-### 🔧 Fitur Lengkap / Roadmap
-- Penyimpanan transaksi permanen menggunakan SQLite
-- Multi-user dengan hak akses berbeda (bendahara, admin, ketua)
-- Backup & restore data lokal
-- Ekspor laporan otomatis (PDF/CSV)
-- ScheduleScreen & StaffScreen lengkap
-- Versi Hackathon: FinanceScreen & HomeScreen siap demo, Schedule & Staff masih placeholder
+- ✅ Penyimpanan transaksi permanen menggunakan SQLite
+- ✅ Multi-user dengan hak akses berbeda (bendahara, admin, ketua)
+- ✅ Backup & restore data lokal
+- ✅ Ekspor laporan otomatis (PDF/CSV)
+- ✅ ScheduleScreen & StaffScreen lengkap
+- ✅ Versi Hackathon: FinanceScreen & HomeScreen siap demo, Schedule & Staff masih placeholder
+- ✅ Aplikasi offline, tidak memerlukan koneksi internet
+- ✅ Pencatatan keuangan rumah ibadah (pemasukan, pengeluaran, saldo)
+- ✅ Jadwal kegiatan ibadah, pengajian, dan acara khusus
+- ✅ Laporan otomatis yang rapi dan bisa diekspor
+- ✅ Struktur petugas fleksibel sesuai kebutuhan rumah ibadah
+- ✅ Tampilan sederhana & mudah digunakan, cocok untuk semua umur
 
 
 - ✅ Aplikasi **offline**, tidak memerlukan koneksi internet.  
@@ -37,6 +42,12 @@ Singkatnya, aplikasi ini menghadirkan **kemudahan, keamanan, dan efisiensi** bag
 ---
 
 ## 🛠️ Teknologi yang Digunakan
+
+### 📥 Instalasi
+1. Clone repo: `git clone https://github.com/pt-mahangdiamondperkasa/novapro.git`
+2. Masuk ke folder proyek: `cd novapro`
+3. Jalankan: `flutter pub get`
+4. Run aplikasi: `flutter run`
 
 - **Flutter (Dart)** → untuk membangun aplikasi lintas platform (Android, iOS, Desktop).  
 - **SQLite (sqflite package)** → database lokal untuk pencatatan kas & jadwal secara offline.  
