@@ -118,7 +118,6 @@ class NovaProApp extends StatelessWidget {
   }
 }
 
-// ================== screens/home_screen.dart ==================
 import 'package:flutter/material.dart';
 import 'finance_screen.dart';
 import 'schedule_screen.dart';
@@ -127,34 +126,93 @@ import 'staff_screen.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  // Fungsi untuk membuat Card Menu yang profesional
+  Widget _buildMenuCard(BuildContext context, String title, IconData icon, Color color, Widget destinationScreen) {
+    return Card(
+      elevation: 5, 
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: InkWell( 
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => destinationScreen));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            children: [
+              Icon(icon, size: 40, color: color), 
+              const SizedBox(width: 20),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const Spacer(), 
+              const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('NOVAPRO - Rumah Ibadah')),
-      body: Center(
+      appBar: AppBar(
+        title: const Text('NOVAPRO Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Theme.of(context).primaryColor, 
+      ),
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton(
-              child: const Text('💰 Manajemen Kas'),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const FinanceScreen()));
-              },
+            // Card Status Keuangan
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Card(
+                color: Theme.of(context).primaryColor, 
+                elevation: 8,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: const Padding(
+                  padding: EdgeInsets.all(25.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Total Saldo Kas:", style: TextStyle(color: Colors.white70, fontSize: 16)),
+                      Text("Rp 1.000.000", style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 10),
+                      Text("Selamat datang di panel admin NovaPro.", style: TextStyle(color: Colors.white70)),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            ElevatedButton(
-              child: const Text('📅 Jadwal Kegiatan'),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const ScheduleScreen()));
-              },
+            
+            const Padding(
+              padding: EdgeInsets.only(left: 20, top: 10, bottom: 5),
+              child: Text("Menu Utama Aplikasi", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
             ),
-            ElevatedButton(
-              child: const Text('👤 Struktur Petugas'),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const StaffScreen()));
-              },
+
+            // Menu Utama dengan Card Icon
+            _buildMenuCard(
+              context,
+              '💰 Manajemen Kas',
+              Icons.account_balance_wallet,
+              Colors.green,
+              const FinanceScreen(),
+            ),
+            _buildMenuCard(
+              context,
+              '📅 Jadwal Kegiatan',
+              Icons.calendar_today,
+              Colors.blue,
+              const ScheduleScreen(),
+            ),
+            _buildMenuCard(
+              context,
+              '👤 Struktur Petugas',
+              Icons.group,
+              Colors.orange,
+              const StaffScreen(),
             ),
           ],
         ),
@@ -162,6 +220,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
 
 // ================== screens/finance_screen.dart ==================
 import 'package:flutter/material.dart';
