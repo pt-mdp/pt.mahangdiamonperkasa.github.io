@@ -14,7 +14,7 @@ Fitur multi-user dengan hak akses berbeda (bendahara, admin, ketua) memastikan s
 
 Singkatnya, aplikasi ini menghadirkan **kemudahan, keamanan, dan efisiensi** bagi pengelolaan rumah ibadah modern.
 ---
-
+"Ini adalah versi built awal, nanti akan diintegrasikan dengan watsonx Orchestrate untuk sistem auditing laporan keuangan yang cerdas."
 
 <h2>🎯 Fitur Utama</h2>
 <pre id="fiturUtama">
