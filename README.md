@@ -2,7 +2,7 @@
 OWNER: PT. MAHANG DIAMOND PERKASA
 WEBSITE: https://pt.mahangdiamondperkasa.github.io
 📌 TENTANG KAMI
-PT. Mahang Diamond Perkasa adalah perusahaan yang berfokus pada pengembangan solusi teknologi, khususnya aplikasi offline untuk manajemen rumah ibadah. Aplikasi NovaPro kami dirancang agar pengelolaan administrasi, keuangan, jadwal ibadah, dan kegiatan pengajian menjadi lebih mudah, rapi, dan tanpa perlu koneksi internet. Fitur multi-user dengan hak akses berbeda memastikan setiap petugas bisa bekerja sesuai perannya. Semua data tersimpan aman di perangkat lokal/flashdisk dan laporan dapat dibuat otomatis dengan cepat. Singkatnya, aplikasi ini menghadirkan kemudahan, keamanan, dan efisiensi bagi pengelolaan rumah ibadah modern. "Ini adalah versi built awal."
+PT. Mahang Diamond Perkasa adalah perusahaan yang berfokus pada pengembangan solusi teknologi, khususnya aplikasi offline untuk manajemen rumah ibadah. Aplikasi NovaPro kami dirancang agar pengelolaan administrasi, keuangan, jadwal ibadah, dan kegiatan menjadi lebih mudah, rapi, dan tanpa perlu koneksi internet. Fitur multi-user dengan hak akses berbeda memastikan setiap petugas bisa bekerja sesuai perannya. Semua data tersimpan aman di perangkat lokal/flashdisk dan laporan dapat dibuat otomatis dengan cepat. Singkatnya, aplikasi ini menghadirkan kemudahan, keamanan, dan efisiensi bagi pengelolaan rumah ibadah modern. "Ini adalah versi built awal."
 🎯 FITUR UTAMA
 ✅ Penyimpanan transaksi permanen menggunakan sistem file lokal aman
 ✅ Multi-user dengan hak akses admin (Password Protected)
