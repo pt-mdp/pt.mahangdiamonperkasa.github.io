@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'NOVAPRO PREMIUM',
+      title: 'NOVAPRO ALL-IN-ONE',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: const Color(0xFF631414),
@@ -35,21 +35,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/* ============================================================
-   PROVIDER
+/* ============================================================ 
+   PROVIDER (LOGIKA UTAMA & DATA)
    ============================================================ */
 
 class AppProvider with ChangeNotifier {
   bool isLogin = false;
   String mode = "public";
-
   String adminPass = "123";
 
+  // Identitas Global NovaPro
   String namaIbadah = "MASJID AN-NUUR";
   String alamat = "SOLUSI OFFLINE - PT. MAHANG DIAMOND PERKASA";
-
-  String runningText =
-      "SELAMAT DATANG DI NOVAPRO PREMIUM • SISTEM MANAJEMEN RUMAH IBADAH MODERN • OFFLINE & AMAN • PT. MAHANG DIAMOND PERKASA";
+  String runningText = "SELAMAT DATANG DI NOVAPRO • SISTEM MANAJEMEN RUMAH IBADAH MODERN • SATU KALI BELI UNTUK SEMUA FITUR • PT. MAHANG DIAMOND PERKASA";
 
   Timer? liveTimer;
   int liveSeconds = 0;
@@ -75,7 +73,7 @@ class AppProvider with ChangeNotifier {
     },
   ];
 
-  List<File> galeri = [];
+  List galeri = [];
 
   bool login(String pass) {
     if (pass == adminPass) {
@@ -122,8 +120,10 @@ class AppProvider with ChangeNotifier {
   }
 
   void hapusAnggota(List list, int index) {
-    list.removeAt(index);
-    notifyListeners();
+    if (index >= 0 && index < list.length) {
+      list.removeAt(index);
+      notifyListeners();
+    }
   }
 
   void tambahFotoGaleri(File f) {
@@ -138,16 +138,20 @@ class AppProvider with ChangeNotifier {
         for (var f in dir.listSync()) {
           try {
             f.deleteSync();
-          } catch (_) {}
+          } catch (e) {
+            debugPrint("Gagal hapus file: $e");
+          }
         }
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint("Error clean cache: $e");
+    }
     notifyListeners();
   }
 }
 
-/* ============================================================
-   ROOT + ANDROID BOX SUPPORT
+/* ============================================================ 
+   ROOT NAVIGASI
    ============================================================ */
 
 class NovaProMasterRoot extends StatelessWidget {
@@ -158,7 +162,6 @@ class NovaProMasterRoot extends StatelessWidget {
     final p = Provider.of<AppProvider>(context);
 
     Widget body;
-
     switch (p.mode) {
       case "admin":
         body = const AdminDashboard();
@@ -204,8 +207,8 @@ class NovaProMasterRoot extends StatelessWidget {
   }
 }
 
-/* ============================================================
-   PUBLIC DISPLAY
+/* ============================================================ 
+   TAMPILAN PUBLIK (LAYAR TV)
    ============================================================ */
 
 class PublicDisplay extends StatefulWidget {
@@ -267,8 +270,7 @@ class _PublicDisplayState extends State<PublicDisplay> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.mosque,
-                      size: 120, color: Color(0xFFFFD700)),
+                  const Icon(Icons.mosque, size: 120, color: Color(0xFFFFD700)),
                   const SizedBox(height: 25),
                   Text(
                     p.namaIbadah,
@@ -282,8 +284,7 @@ class _PublicDisplayState extends State<PublicDisplay> {
                   const SizedBox(height: 10),
                   Text(
                     p.alamat,
-                    style: const TextStyle(
-                        color: Color(0xFFFFD700), fontSize: 18),
+                    style: const TextStyle(color: Color(0xFFFFD700), fontSize: 18),
                   ),
                 ],
               ),
@@ -307,8 +308,7 @@ class _PublicDisplayState extends State<PublicDisplay> {
                   scrollDirection: Axis.horizontal,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 25),
+                      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 25),
                       child: Text(
                         p.runningText,
                         style: const TextStyle(
@@ -330,25 +330,22 @@ class _PublicDisplayState extends State<PublicDisplay> {
 
   void _showLogin(BuildContext context, AppProvider p) {
     final c = TextEditingController();
-
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Admin Access"),
+        title: const Text("Akses Admin"),
         content: TextField(
           controller: c,
           obscureText: true,
-          decoration: const InputDecoration(labelText: "Password"),
+          decoration: const InputDecoration(labelText: "Masukkan Password"),
         ),
         actions: [
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF631414)),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF631414)),
             onPressed: () {
               if (p.login(c.text)) Navigator.pop(context);
             },
-            child:
-                const Text("Masuk", style: TextStyle(color: Colors.white)),
+            child: const Text("Masuk", style: TextStyle(color: Colors.white)),
           )
         ],
       ),
@@ -356,7 +353,7 @@ class _PublicDisplayState extends State<PublicDisplay> {
   }
 }
 
-/* ============================================================
+/* ============================================================ 
    ADMIN DASHBOARD
    ============================================================ */
 
@@ -379,19 +376,14 @@ class AdminDashboard extends StatelessWidget {
         crossAxisSpacing: 20,
         mainAxisSpacing: 20,
         children: [
-          _card(Icons.group_work, "STRUKTUR", "Kelola Pengurus",
-              () => p.mode = "struktur"),
-          _card(Icons.photo_album, "GALERI", "Foto Kegiatan",
-              () => p.mode = "gallery"),
-          _card(Icons.sensors, "LIVE DISPLAY", "Mode Tayangan",
-              () => p.startLive()),
-          _card(Icons.calculate, "KALKULATOR", "Hitung cepat kas",
-              () => p.mode = "calc"),
-          _card(Icons.auto_fix_high, "OPTIMASI", "Bersihkan Cache",
-              () async {
+          _card(Icons.group_work, "STRUKTUR", "Kelola Pengurus", () => p.mode = "struktur"),
+          _card(Icons.photo_album, "GALERI", "Foto Kegiatan", () => p.mode = "gallery"),
+          _card(Icons.sensors, "LIVE DISPLAY", "Mode Tayangan", () => p.startLive()),
+          _card(Icons.calculate, "KALKULATOR", "Hitung Cepat Kas", () => p.mode = "calc"),
+          _card(Icons.auto_fix_high, "OPTIMASI", "Bersihkan Cache", () async {
             await p.cleanCache();
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Cache dibersihkan")),
+              const SnackBar(content: Text("Sistem dioptimalkan & Cache dibersihkan")),
             );
           }),
         ],
@@ -401,8 +393,7 @@ class AdminDashboard extends StatelessWidget {
           onPressed: () => p.logout(),
           child: const Text(
             "KELUAR SISTEM",
-            style: TextStyle(
-                color: Color(0xFF631414), fontWeight: FontWeight.bold),
+            style: TextStyle(color: Color(0xFF631414), fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -421,13 +412,8 @@ class AdminDashboard extends StatelessWidget {
             Icon(icon, size: 48, color: const Color(0xFF631414)),
             const SizedBox(height: 10),
             Text(title,
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Color(0xFF631414))),
-            Text(sub,
-                style:
-                    const TextStyle(color: Colors.grey, fontSize: 12)),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF631414))),
+            Text(sub, style: const TextStyle(color: Colors.grey, fontSize: 12)),
           ],
         ),
       ),
@@ -435,8 +421,8 @@ class AdminDashboard extends StatelessWidget {
   }
 }
 
-/* ============================================================
-   STRUKTUR
+/* ============================================================ 
+   STRUKTUR MANAGER
    ============================================================ */
 
 class StrukturManager extends StatelessWidget {
@@ -448,10 +434,8 @@ class StrukturManager extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("KELOLA PETUGAS"),
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => p.mode = "admin"),
+        title: const Text("KELOLA PENGURUS"),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => p.mode = "admin"),
         backgroundColor: const Color(0xFF631414),
         foregroundColor: Colors.white,
       ),
@@ -462,46 +446,30 @@ class StrukturManager extends StatelessWidget {
               (s) => Card(
                 margin: const EdgeInsets.only(bottom: 15),
                 child: ExpansionTile(
-                  leading: const Icon(Icons.assignment_ind,
-                      color: Color(0xFF631414)),
-                  title: Text(
-                    s['jabatan'],
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF631414)),
-                  ),
+                  leading: const Icon(Icons.assignment_ind, color: Color(0xFF631414)),
+                  title: Text(s['jabatan'],
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF631414))),
                   children: [
-                    ...s['anggota']
-                        .asMap()
-                        .entries
-                        .map(
+                    ...s['anggota'].asMap().entries.map(
                           (e) => ListTile(
                             leading: CircleAvatar(
-                              backgroundColor:
-                                  const Color(0xFF631414),
-                              backgroundImage: e.value['foto'] !=
-                                      null
-                                  ? FileImage(e.value['foto'])
-                                  : null,
+                              backgroundColor: const Color(0xFF631414),
+                              backgroundImage: e.value['foto'] != null ? FileImage(e.value['foto']) : null,
                               child: e.value['foto'] == null
-                                  ? const Icon(Icons.person,
-                                      color: Color(0xFFFFD700))
+                                  ? const Icon(Icons.person, color: Color(0xFFFFD700))
                                   : null,
                             ),
                             title: Text(e.value['nama']),
                             trailing: IconButton(
-                              icon: const Icon(Icons.delete,
-                                  color: Colors.red),
-                              onPressed: () => p.hapusAnggota(
-                                  s['anggota'], e.key),
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => p.hapusAnggota(s['anggota'], e.key),
                             ),
                           ),
                         ),
                     TextButton.icon(
-                      onPressed: () =>
-                          _add(context, p, s['anggota']),
+                      onPressed: () => _add(context, p, s['anggota']),
                       icon: const Icon(Icons.add),
-                      label: const Text("Tambah Petugas"),
+                      label: const Text("Tambah Anggota"),
                     )
                   ],
                 ),
@@ -515,27 +483,22 @@ class StrukturManager extends StatelessWidget {
   void _add(BuildContext context, AppProvider p, List list) async {
     final ctrl = TextEditingController();
     File? foto;
-
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Input Data Petugas"),
+        title: const Text("Input Data Baru"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-                controller: ctrl,
-                decoration:
-                    const InputDecoration(hintText: "Nama Lengkap")),
+            TextField(controller: ctrl, decoration: const InputDecoration(hintText: "Nama Lengkap")),
             const SizedBox(height: 15),
             ElevatedButton.icon(
               onPressed: () async {
-                final img = await ImagePicker()
-                    .pickImage(source: ImageSource.gallery);
+                final img = await ImagePicker().pickImage(source: ImageSource.gallery);
                 if (img != null) foto = File(img.path);
               },
               icon: const Icon(Icons.image),
-              label: const Text("Unggah Foto"),
+              label: const Text("Pilih Foto"),
             )
           ],
         ),
@@ -555,8 +518,8 @@ class StrukturManager extends StatelessWidget {
   }
 }
 
-/* ============================================================
-   GALERI
+/* ============================================================ 
+   GALLERY MANAGER
    ============================================================ */
 
 class GalleryManager extends StatelessWidget {
@@ -569,9 +532,7 @@ class GalleryManager extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("GALERI KEGIATAN"),
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => p.mode = "admin"),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => p.mode = "admin"),
         backgroundColor: const Color(0xFF631414),
         foregroundColor: Colors.white,
       ),
@@ -579,20 +540,16 @@ class GalleryManager extends StatelessWidget {
         backgroundColor: const Color(0xFF631414),
         child: const Icon(Icons.add_a_photo, color: Colors.white),
         onPressed: () async {
-          final img = await ImagePicker()
-              .pickImage(source: ImageSource.gallery);
+          final img = await ImagePicker().pickImage(source: ImageSource.gallery);
           if (img != null) p.tambahFotoGaleri(File(img.path));
         },
       ),
       body: p.galeri.isEmpty
-          ? const Center(child: Text("Belum ada dokumentasi."))
+          ? const Center(child: Text("Belum ada foto kegiatan."))
           : GridView.builder(
               padding: const EdgeInsets.all(15),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, crossAxisSpacing: 12, mainAxisSpacing: 12),
               itemCount: p.galeri.length,
               itemBuilder: (_, i) => ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -603,8 +560,8 @@ class GalleryManager extends StatelessWidget {
   }
 }
 
-/* ============================================================
-   LIVE DISPLAY
+/* ============================================================ 
+   LIVE DISPLAY (MODE TAYANGAN TV)
    ============================================================ */
 
 class LiveDisplay extends StatelessWidget {
@@ -620,32 +577,24 @@ class LiveDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.radio_button_checked,
-                color: Colors.red, size: 40),
+            const Icon(Icons.radio_button_checked, color: Colors.red, size: 40),
             const SizedBox(height: 15),
             const Text(
-              "LIVE BROADCAST DISPLAY",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold),
+              "MODE TAYANGAN AKTIF",
+              style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Text(
-              "WAKTU AKTIF: ${p.liveTime}",
-              style: const TextStyle(
-                  color: Color(0xFFFFD700), fontSize: 22),
+              "WAKTU BERJALAN: ${p.liveTime}",
+              style: const TextStyle(color: Color(0xFFFFD700), fontSize: 22),
             ),
             const SizedBox(height: 40),
-            const CircularProgressIndicator(
-                color: Color(0xFFFFD700)),
+            const CircularProgressIndicator(color: Color(0xFFFFD700)),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => p.stopLive(),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF631414)),
-              child: const Text("AKHIRI TAYANGAN",
-                  style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF631414)),
+              child: const Text("AKHIRI TAYANGAN", style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -654,8 +603,8 @@ class LiveDisplay extends StatelessWidget {
   }
 }
 
-/* ============================================================
-   KALKULATOR (BARU)
+/* ============================================================ 
+   KALKULATOR KAS
    ============================================================ */
 
 class CalculatorPage extends StatefulWidget {
@@ -677,10 +626,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("KALKULATOR KAS"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => p.mode = "admin",
-        ),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => p.mode = "admin"),
         backgroundColor: const Color(0xFF631414),
         foregroundColor: Colors.white,
       ),
@@ -691,14 +637,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
             TextField(
               controller: a,
               keyboardType: TextInputType.number,
-              decoration:
-                  const InputDecoration(labelText: "Angka 1"),
+              decoration: const InputDecoration(labelText: "Masukkan Nominal A"),
             ),
             TextField(
               controller: b,
               keyboardType: TextInputType.number,
-              decoration:
-                  const InputDecoration(labelText: "Angka 2"),
+              decoration: const InputDecoration(labelText: "Masukkan Nominal B"),
             ),
             const SizedBox(height: 20),
             Wrap(
@@ -711,10 +655,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
               ],
             ),
             const SizedBox(height: 30),
+            const Text("HASIL PERHITUNGAN:", style: TextStyle(fontSize: 14, color: Colors.grey)),
             Text(
-              "Hasil : $hasil",
-              style: const TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold),
+              hasil.toStringAsFixed(0),
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF631414)),
             )
           ],
         ),
@@ -725,9 +669,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
   Widget _btn(String t, VoidCallback onTap) {
     return ElevatedButton(
       onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF631414)),
-      child: Text(t, style: const TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF631414)),
+      child: Text(t, style: const TextStyle(color: Colors.white, fontSize: 20)),
     );
   }
 
@@ -737,6 +680,3 @@ class _CalculatorPageState extends State<CalculatorPage> {
     setState(() => hasil = op(x, y));
   }
 }
-git add lib/main.dart
-git commit -m "Unified NOVAPRO Premium + Android Box + Calculator"
-git push
