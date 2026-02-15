@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
 }
 
 /* ============================================================ 
-   PROVIDER (LOGIKA UTAMA & DATA)
+   PROVIDER (LOGIKA UTAMA & DATA) 
    ============================================================ */
 
 class AppProvider with ChangeNotifier {
@@ -44,10 +44,10 @@ class AppProvider with ChangeNotifier {
   String mode = "public";
   String adminPass = "123";
 
-  // Identitas Global NovaPro
+  // Identitas Global NovaPro - REVISI: Menggunakan nama Novarizal Developer
   String namaIbadah = "MASJID AN-NUUR";
-  String alamat = "SOLUSI OFFLINE - PT. MAHANG DIAMOND PERKASA";
-  String runningText = "SELAMAT DATANG DI NOVAPRO • SISTEM MANAJEMEN RUMAH IBADAH MODERN • SATU KALI BELI UNTUK SEMUA FITUR • PT. MAHANG DIAMOND PERKASA";
+  String alamat = "SOLUSI OFFLINE - NOVARIZAL DEVELOPER";
+  String runningText = "SELAMAT DATANG DI NOVAPRO • SISTEM MANAJEMEN RUMAH IBADAH MODERN • SATU KALI BELI UNTUK SEMUA FITUR • BY: NOVARIZAL DEVELOPER";
 
   Timer? liveTimer;
   int liveSeconds = 0;
@@ -131,7 +131,7 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> cleanCache() async {
+  Future cleanCache() async {
     try {
       final dir = await getTemporaryDirectory();
       if (dir.existsSync()) {
@@ -151,7 +151,7 @@ class AppProvider with ChangeNotifier {
 }
 
 /* ============================================================ 
-   ROOT NAVIGASI
+   ROOT NAVIGASI 
    ============================================================ */
 
 class NovaProMasterRoot extends StatelessWidget {
@@ -208,7 +208,7 @@ class NovaProMasterRoot extends StatelessWidget {
 }
 
 /* ============================================================ 
-   TAMPILAN PUBLIK (LAYAR TV)
+   TAMPILAN PUBLIK (LAYAR TV) 
    ============================================================ */
 
 class PublicDisplay extends StatefulWidget {
@@ -332,7 +332,7 @@ class _PublicDisplayState extends State<PublicDisplay> {
     final c = TextEditingController();
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (context) => AlertDialog(
         title: const Text("Akses Admin"),
         content: TextField(
           controller: c,
@@ -354,7 +354,7 @@ class _PublicDisplayState extends State<PublicDisplay> {
 }
 
 /* ============================================================ 
-   ADMIN DASHBOARD
+   ADMIN DASHBOARD 
    ============================================================ */
 
 class AdminDashboard extends StatelessWidget {
@@ -411,8 +411,7 @@ class AdminDashboard extends StatelessWidget {
           children: [
             Icon(icon, size: 48, color: const Color(0xFF631414)),
             const SizedBox(height: 10),
-            Text(title,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF631414))),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF631414))),
             Text(sub, style: const TextStyle(color: Colors.grey, fontSize: 12)),
           ],
         ),
@@ -422,7 +421,7 @@ class AdminDashboard extends StatelessWidget {
 }
 
 /* ============================================================ 
-   STRUKTUR MANAGER
+   STRUKTUR MANAGER 
    ============================================================ */
 
 class StrukturManager extends StatelessWidget {
@@ -467,7 +466,7 @@ class StrukturManager extends StatelessWidget {
                           ),
                         ),
                     TextButton.icon(
-                      onPressed: () => _add(context, p, s['anggota']),
+                      onPressed: () => _addAnggotaDialog(context, p, s['anggota']),
                       icon: const Icon(Icons.add),
                       label: const Text("Tambah Anggota"),
                     )
@@ -480,12 +479,12 @@ class StrukturManager extends StatelessWidget {
     );
   }
 
-  void _add(BuildContext context, AppProvider p, List list) async {
+  void _addAnggotaDialog(BuildContext context, AppProvider p, List list) async {
     final ctrl = TextEditingController();
     File? foto;
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (context) => AlertDialog(
         title: const Text("Input Data Baru"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -519,7 +518,7 @@ class StrukturManager extends StatelessWidget {
 }
 
 /* ============================================================ 
-   GALLERY MANAGER
+   GALLERY MANAGER 
    ============================================================ */
 
 class GalleryManager extends StatelessWidget {
@@ -561,7 +560,7 @@ class GalleryManager extends StatelessWidget {
 }
 
 /* ============================================================ 
-   LIVE DISPLAY (MODE TAYANGAN TV)
+   LIVE DISPLAY (MODE TAYANGAN TV) 
    ============================================================ */
 
 class LiveDisplay extends StatelessWidget {
@@ -604,7 +603,7 @@ class LiveDisplay extends StatelessWidget {
 }
 
 /* ============================================================ 
-   KALKULATOR KAS
+   KALKULATOR KAS 
    ============================================================ */
 
 class CalculatorPage extends StatefulWidget {
