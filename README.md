@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider(
-      create: (_) => AppProvider(),
+      create: (_) => AppProvider()..loadData(),
       child: const MyApp(),
     ),
   );
@@ -26,8 +29,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xFF631414),
         scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-        colorScheme: ColorScheme.fromSwatch()
-            .copyWith(secondary: const Color(0xFFFFD700)),
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: const Color(0xFFFFD700)),
         useMaterial3: true,
       ),
       home: const NovaProMasterRoot(),
@@ -35,45 +38,63 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/* ============================================================ 
-   PROVIDER (LOGIKA UTAMA & DATA) 
-   ============================================================ */
+/* ============================================================
+   PROVIDER
+============================================================ */
 
 class AppProvider with ChangeNotifier {
   bool isLogin = false;
   String mode = "public";
   String adminPass = "123";
 
-  // Identitas Global NovaPro - REVISI: Menggunakan nama Novarizal Developer
   String namaIbadah = "MASJID AN-NUUR";
   String alamat = "SOLUSI OFFLINE - NOVARIZAL DEVELOPER";
-  String runningText = "SELAMAT DATANG DI NOVAPRO • SISTEM MANAJEMEN RUMAH IBADAH MODERN • SATU KALI BELI UNTUK SEMUA FITUR • BY: NOVARIZAL DEVELOPER";
+  String runningText =
+      "SELAMAT DATANG DI NOVAPRO • SISTEM MANAJEMEN MODERN • BY: NOVARIZAL DEVELOPER";
+
+  String houseUniqueCode =
+      "NP-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}";
+
+  List<Map<String, dynamic>> struktur = [
+    {"jabatan": "Ketua", "anggota": []},
+    {"jabatan": "Bendahara", "anggota": []},
+    {"jabatan": "Sekretaris", "anggota": []},
+  ];
+
+  List<File> galeri = [];
 
   Timer? liveTimer;
   int liveSeconds = 0;
 
-  List<Map<String, dynamic>> struktur = [
-    {
-      "jabatan": "Ketua",
-      "anggota": [
-        {"nama": "Kariyono Hadi, BA", "foto": null}
-      ]
-    },
-    {
-      "jabatan": "Bendahara",
-      "anggota": [
-        {"nama": "Suherdi", "foto": null}
-      ]
-    },
-    {
-      "jabatan": "Sekretaris",
-      "anggota": [
-        {"nama": "Anang Ariyanto", "foto": null}
-      ]
-    },
-  ];
+  /* ===================== SAVE / LOAD ===================== */
 
-  List galeri = [];
+  Future<void> saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('namaIbadah', namaIbadah);
+    await prefs.setString('alamat', alamat);
+    await prefs.setString('runningText', runningText);
+
+    List<String> paths = galeri.map((e) => e.path).toList();
+    await prefs.setStringList('galeriPaths', paths);
+
+    notifyListeners();
+  }
+
+  Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    namaIbadah = prefs.getString('namaIbadah') ?? namaIbadah;
+    alamat = prefs.getString('alamat') ?? alamat;
+    runningText = prefs.getString('runningText') ?? runningText;
+
+    final paths = prefs.getStringList('galeriPaths');
+    if (paths != null) {
+      galeri = paths.map((e) => File(e)).toList();
+    }
+
+    notifyListeners();
+  }
+
+  /* ===================== LOGIN ===================== */
 
   bool login(String pass) {
     if (pass == adminPass) {
@@ -92,6 +113,8 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /* ===================== LIVE ===================== */
+
   void startLive() {
     mode = "live";
     liveSeconds = 0;
@@ -104,7 +127,7 @@ class AppProvider with ChangeNotifier {
 
   void stopLive() {
     liveTimer?.cancel();
-    mode = "public";
+    mode = "admin";
     notifyListeners();
   }
 
@@ -114,45 +137,39 @@ class AppProvider with ChangeNotifier {
     return "${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}";
   }
 
+  /* ===================== DATA ===================== */
+
   void tambahAnggota(List list, String nama, File? foto) {
     list.add({"nama": nama, "foto": foto});
     notifyListeners();
   }
 
   void hapusAnggota(List list, int index) {
-    if (index >= 0 && index < list.length) {
-      list.removeAt(index);
-      notifyListeners();
-    }
+    list.removeAt(index);
+    notifyListeners();
   }
 
   void tambahFotoGaleri(File f) {
     galeri.add(f);
-    notifyListeners();
+    saveData();
   }
 
-  Future cleanCache() async {
-    try {
-      final dir = await getTemporaryDirectory();
-      if (dir.existsSync()) {
-        for (var f in dir.listSync()) {
-          try {
-            f.deleteSync();
-          } catch (e) {
-            debugPrint("Gagal hapus file: $e");
-          }
-        }
-      }
-    } catch (e) {
-      debugPrint("Error clean cache: $e");
+  Future<void> cleanCache() async {
+    final dir = await getTemporaryDirectory();
+    if (dir.existsSync()) {
+      dir.listSync().forEach((f) {
+        try {
+          f.deleteSync(recursive: true);
+        } catch (_) {}
+      });
     }
     notifyListeners();
   }
 }
 
-/* ============================================================ 
-   ROOT NAVIGASI 
-   ============================================================ */
+/* ============================================================
+   ROOT
+============================================================ */
 
 class NovaProMasterRoot extends StatelessWidget {
   const NovaProMasterRoot({super.key});
@@ -207,13 +224,12 @@ class NovaProMasterRoot extends StatelessWidget {
   }
 }
 
-/* ============================================================ 
-   TAMPILAN PUBLIK (LAYAR TV) 
-   ============================================================ */
+/* ============================================================
+   PUBLIC DISPLAY
+============================================================ */
 
 class PublicDisplay extends StatefulWidget {
   const PublicDisplay({super.key});
-
   @override
   State<PublicDisplay> createState() => _PublicDisplayState();
 }
@@ -232,91 +248,70 @@ class _PublicDisplayState extends State<PublicDisplay> {
     while (mounted && _scrollController.hasClients) {
       await Future.delayed(const Duration(milliseconds: 50));
       if (!_scrollController.hasClients) return;
-
-      double maxScroll = _scrollController.position.maxScrollExtent;
-      double currentScroll = _scrollController.position.pixels;
-
-      if (currentScroll >= maxScroll) {
+      final max = _scrollController.position.maxScrollExtent;
+      final cur = _scrollController.position.pixels;
+      if (cur >= max) {
         _scrollController.jumpTo(0);
       } else {
-        _scrollController.jumpTo(currentScroll + 2);
+        _scrollController.jumpTo(cur + 2);
       }
     }
   }
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final p = Provider.of<AppProvider>(context);
-
     return Scaffold(
       body: Container(
-        width: double.infinity,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF631414), Color(0xFF2E0909)],
-          ),
-        ),
+            gradient:
+                LinearGradient(colors: [Color(0xFF631414), Color(0xFF2E0909)])),
         child: Stack(
           children: [
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.mosque, size: 120, color: Color(0xFFFFD700)),
-                  const SizedBox(height: 25),
-                  Text(
-                    p.namaIbadah,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2),
-                    textAlign: TextAlign.center,
-                  ),
+                  const Icon(Icons.mosque,
+                      size: 120, color: Color(0xFFFFD700)),
+                  Text(p.namaIbadah,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 42,
+                          fontWeight: FontWeight.bold)),
+                  Text(p.alamat,
+                      style: const TextStyle(
+                          color: Color(0xFFFFD700), fontSize: 18)),
                   const SizedBox(height: 10),
-                  Text(
-                    p.alamat,
-                    style: const TextStyle(color: Color(0xFFFFD700), fontSize: 18),
-                  ),
+                  Text("ID: ${p.houseUniqueCode}",
+                      style:
+                          const TextStyle(color: Colors.white24, fontSize: 12)),
                 ],
               ),
             ),
             Positioned(
-              top: 30,
-              right: 20,
-              child: IconButton(
-                icon: const Icon(Icons.settings, color: Colors.white24),
-                onPressed: () => _showLogin(context, p),
-              ),
-            ),
+                top: 30,
+                right: 20,
+                child: IconButton(
+                    icon: const Icon(Icons.settings, color: Colors.white24),
+                    onPressed: () => _showLogin(context, p))),
             Positioned(
               bottom: 0,
               child: Container(
-                width: MediaQuery.of(context).size.width,
                 height: 70,
-                color: const Color(0xFF631414).withOpacity(0.95),
+                width: MediaQuery.of(context).size.width,
+                color: const Color(0xFF631414).withOpacity(0.9),
                 child: ListView(
                   controller: _scrollController,
                   scrollDirection: Axis.horizontal,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 25),
-                      child: Text(
-                        p.runningText,
-                        style: const TextStyle(
-                            color: Color(0xFFFFD700),
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                        padding: const EdgeInsets.all(18),
+                        child: Text(p.runningText,
+                            style: const TextStyle(
+                                color: Color(0xFFFFD700),
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold))),
                     const SizedBox(width: 800),
                   ],
                 ),
@@ -331,31 +326,28 @@ class _PublicDisplayState extends State<PublicDisplay> {
   void _showLogin(BuildContext context, AppProvider p) {
     final c = TextEditingController();
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Akses Admin"),
-        content: TextField(
-          controller: c,
-          obscureText: true,
-          decoration: const InputDecoration(labelText: "Masukkan Password"),
-        ),
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF631414)),
-            onPressed: () {
-              if (p.login(c.text)) Navigator.pop(context);
-            },
-            child: const Text("Masuk", style: TextStyle(color: Colors.white)),
-          )
-        ],
-      ),
-    );
+        context: context,
+        builder: (_) => AlertDialog(
+              title: const Text("Akses Admin"),
+              content: TextField(
+                controller: c,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Password"),
+              ),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      if (p.login(c.text)) Navigator.pop(context);
+                    },
+                    child: const Text("Masuk"))
+              ],
+            ));
   }
 }
 
-/* ============================================================ 
-   ADMIN DASHBOARD 
-   ============================================================ */
+/* ============================================================
+   DASHBOARD
+============================================================ */
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -371,58 +363,33 @@ class AdminDashboard extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       body: GridView.count(
-        padding: const EdgeInsets.all(25),
         crossAxisCount: 2,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
+        padding: const EdgeInsets.all(20),
         children: [
-          _card(Icons.group_work, "STRUKTUR", "Kelola Pengurus", () => p.mode = "struktur"),
-          _card(Icons.photo_album, "GALERI", "Foto Kegiatan", () => p.mode = "gallery"),
-          _card(Icons.sensors, "LIVE DISPLAY", "Mode Tayangan", () => p.startLive()),
-          _card(Icons.calculate, "KALKULATOR", "Hitung Cepat Kas", () => p.mode = "calc"),
-          _card(Icons.auto_fix_high, "OPTIMASI", "Bersihkan Cache", () async {
-            await p.cleanCache();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Sistem dioptimalkan & Cache dibersihkan")),
-            );
-          }),
+          _card(Icons.group, "STRUKTUR", () => p.mode = "struktur"),
+          _card(Icons.photo, "GALERI", () => p.mode = "gallery"),
+          _card(Icons.tv, "LIVE", () => p.startLive()),
+          _card(Icons.calculate, "KALKULATOR", () => p.mode = "calc"),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: TextButton(
-          onPressed: () => p.logout(),
-          child: const Text(
-            "KELUAR SISTEM",
-            style: TextStyle(color: Color(0xFF631414), fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
+      bottomNavigationBar: TextButton(
+          onPressed: () => p.logout(), child: const Text("KELUAR")),
     );
   }
 
-  Widget _card(IconData icon, String title, String sub, VoidCallback tap) {
-    return InkWell(
-      onTap: tap,
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Column(
+  Widget _card(IconData i, String t, VoidCallback tap) => InkWell(
+        onTap: tap,
+        child: Card(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 48, color: const Color(0xFF631414)),
-            const SizedBox(height: 10),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF631414))),
-            Text(sub, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-          ],
-        ),
-      ),
-    );
-  }
+          children: [Icon(i, size: 40), Text(t)],
+        )),
+      );
 }
 
-/* ============================================================ 
-   STRUKTUR MANAGER 
-   ============================================================ */
+/* ============================================================
+   STRUKTUR PENGURUS
+============================================================ */
 
 class StrukturManager extends StatelessWidget {
   const StrukturManager({super.key});
@@ -433,93 +400,90 @@ class StrukturManager extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("KELOLA PENGURUS"),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => p.mode = "admin"),
-        backgroundColor: const Color(0xFF631414),
-        foregroundColor: Colors.white,
+        title: const Text("STRUKTUR PENGURUS"),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => p.mode = "admin"),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         children: p.struktur
-            .map(
-              (s) => Card(
-                margin: const EdgeInsets.only(bottom: 15),
-                child: ExpansionTile(
-                  leading: const Icon(Icons.assignment_ind, color: Color(0xFF631414)),
-                  title: Text(s['jabatan'],
-                      style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF631414))),
-                  children: [
-                    ...s['anggota'].asMap().entries.map(
-                          (e) => ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: const Color(0xFF631414),
-                              backgroundImage: e.value['foto'] != null ? FileImage(e.value['foto']) : null,
-                              child: e.value['foto'] == null
-                                  ? const Icon(Icons.person, color: Color(0xFFFFD700))
-                                  : null,
-                            ),
-                            title: Text(e.value['nama']),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => p.hapusAnggota(s['anggota'], e.key),
-                            ),
-                          ),
-                        ),
-                    TextButton.icon(
-                      onPressed: () => _addAnggotaDialog(context, p, s['anggota']),
-                      icon: const Icon(Icons.add),
-                      label: const Text("Tambah Anggota"),
-                    )
-                  ],
-                ),
-              ),
-            )
+            .map((s) => Card(
+                  child: ExpansionTile(
+                    title: Text(s['jabatan']),
+                    children: [
+                      ...s['anggota']
+                          .asMap()
+                          .entries
+                          .map((e) => ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: e.value['foto'] != null
+                                      ? FileImage(e.value['foto'])
+                                      : null,
+                                  child: e.value['foto'] == null
+                                      ? const Icon(Icons.person)
+                                      : null,
+                                ),
+                                title: Text(e.value['nama']),
+                                trailing: IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                    onPressed: () => p.hapusAnggota(
+                                        s['anggota'], e.key)),
+                              )),
+                      TextButton.icon(
+                          onPressed: () =>
+                              _add(context, p, s['anggota']),
+                          icon: const Icon(Icons.add),
+                          label: const Text("Tambah"))
+                    ],
+                  ),
+                ))
             .toList(),
       ),
     );
   }
 
-  void _addAnggotaDialog(BuildContext context, AppProvider p, List list) async {
-    final ctrl = TextEditingController();
+  void _add(BuildContext context, AppProvider p, List list) async {
+    final c = TextEditingController();
     File? foto;
+
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Input Data Baru"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: ctrl, decoration: const InputDecoration(hintText: "Nama Lengkap")),
-            const SizedBox(height: 15),
-            ElevatedButton.icon(
-              onPressed: () async {
-                final img = await ImagePicker().pickImage(source: ImageSource.gallery);
-                if (img != null) foto = File(img.path);
-              },
-              icon: const Icon(Icons.image),
-              label: const Text("Pilih Foto"),
-            )
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              if (ctrl.text.isNotEmpty) {
-                p.tambahAnggota(list, ctrl.text, foto);
-              }
-              Navigator.pop(context);
-            },
-            child: const Text("Simpan"),
-          )
-        ],
-      ),
-    );
+        context: context,
+        builder: (_) => AlertDialog(
+              title: const Text("Tambah Pengurus"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(controller: c, decoration: const InputDecoration(labelText: "Nama")),
+                  const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                      onPressed: () async {
+                        final img = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                        if (img != null) foto = File(img.path);
+                      },
+                      icon: const Icon(Icons.image),
+                      label: const Text("Pilih Foto"))
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      if (c.text.isNotEmpty) {
+                        p.tambahAnggota(list, c.text, foto);
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text("Simpan"))
+              ],
+            ));
   }
 }
 
-/* ============================================================ 
-   GALLERY MANAGER 
-   ============================================================ */
+/* ============================================================
+   GALERI
+============================================================ */
 
 class GalleryManager extends StatelessWidget {
   const GalleryManager({super.key});
@@ -530,38 +494,32 @@ class GalleryManager extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("GALERI KEGIATAN"),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => p.mode = "admin"),
-        backgroundColor: const Color(0xFF631414),
-        foregroundColor: Colors.white,
+        title: const Text("GALERI"),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => p.mode = "admin"),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF631414),
-        child: const Icon(Icons.add_a_photo, color: Colors.white),
         onPressed: () async {
-          final img = await ImagePicker().pickImage(source: ImageSource.gallery);
+          final img =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
           if (img != null) p.tambahFotoGaleri(File(img.path));
         },
+        child: const Icon(Icons.add_a_photo),
       ),
-      body: p.galeri.isEmpty
-          ? const Center(child: Text("Belum ada foto kegiatan."))
-          : GridView.builder(
-              padding: const EdgeInsets.all(15),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, crossAxisSpacing: 12, mainAxisSpacing: 12),
-              itemCount: p.galeri.length,
-              itemBuilder: (_, i) => ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.file(p.galeri[i], fit: BoxFit.cover),
-              ),
-            ),
+      body: GridView.builder(
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        itemCount: p.galeri.length,
+        itemBuilder: (_, i) => Image.file(p.galeri[i], fit: BoxFit.cover),
+      ),
     );
   }
 }
 
-/* ============================================================ 
-   LIVE DISPLAY (MODE TAYANGAN TV) 
-   ============================================================ */
+/* ============================================================
+   LIVE
+============================================================ */
 
 class LiveDisplay extends StatelessWidget {
   const LiveDisplay({super.key});
@@ -573,38 +531,24 @@ class LiveDisplay extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.radio_button_checked, color: Colors.red, size: 40),
-            const SizedBox(height: 15),
-            const Text(
-              "MODE TAYANGAN AKTIF",
-              style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "WAKTU BERJALAN: ${p.liveTime}",
-              style: const TextStyle(color: Color(0xFFFFD700), fontSize: 22),
-            ),
-            const SizedBox(height: 40),
-            const CircularProgressIndicator(color: Color(0xFFFFD700)),
-            const SizedBox(height: 40),
-            ElevatedButton(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const Icon(Icons.circle, color: Colors.red, size: 40),
+          const SizedBox(height: 10),
+          Text("LIVE ${p.liveTime}",
+              style: const TextStyle(color: Colors.white, fontSize: 30)),
+          const SizedBox(height: 30),
+          ElevatedButton(
               onPressed: () => p.stopLive(),
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF631414)),
-              child: const Text("AKHIRI TAYANGAN", style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
+              child: const Text("HENTIKAN"))
+        ]),
       ),
     );
   }
 }
 
-/* ============================================================ 
-   KALKULATOR KAS 
-   ============================================================ */
+/* ============================================================
+   KALKULATOR
+============================================================ */
 
 class CalculatorPage extends StatefulWidget {
   const CalculatorPage({super.key});
@@ -618,64 +562,40 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final b = TextEditingController();
   double hasil = 0;
 
-  @override
-  Widget build(BuildContext context) {
-    final p = Provider.of<AppProvider>(context, listen: false);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("KALKULATOR KAS"),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => p.mode = "admin"),
-        backgroundColor: const Color(0xFF631414),
-        foregroundColor: Colors.white,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            TextField(
-              controller: a,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: "Masukkan Nominal A"),
-            ),
-            TextField(
-              controller: b,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: "Masukkan Nominal B"),
-            ),
-            const SizedBox(height: 20),
-            Wrap(
-              spacing: 10,
-              children: [
-                _btn("+", () => hitung((x, y) => x + y)),
-                _btn("-", () => hitung((x, y) => x - y)),
-                _btn("×", () => hitung((x, y) => x * y)),
-                _btn("÷", () => hitung((x, y) => x / y)),
-              ],
-            ),
-            const SizedBox(height: 30),
-            const Text("HASIL PERHITUNGAN:", style: TextStyle(fontSize: 14, color: Colors.grey)),
-            Text(
-              hasil.toStringAsFixed(0),
-              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF631414)),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _btn(String t, VoidCallback onTap) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF631414)),
-      child: Text(t, style: const TextStyle(color: Colors.white, fontSize: 20)),
-    );
-  }
-
   void hitung(double Function(double, double) op) {
     final x = double.tryParse(a.text) ?? 0;
     final y = double.tryParse(b.text) ?? 0;
     setState(() => hasil = op(x, y));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("KALKULATOR KAS")),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(children: [
+          TextField(
+              controller: a,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: "Angka 1")),
+          TextField(
+              controller: b,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: "Angka 2")),
+          const SizedBox(height: 20),
+          Wrap(spacing: 10, children: [
+            ElevatedButton(onPressed: () => hitung((x, y) => x + y), child: const Text("+")),
+            ElevatedButton(onPressed: () => hitung((x, y) => x - y), child: const Text("-")),
+            ElevatedButton(onPressed: () => hitung((x, y) => x * y), child: const Text("×")),
+            ElevatedButton(onPressed: () => hitung((x, y) => y == 0 ? 0 : x / y), child: const Text("÷")),
+          ]),
+          const SizedBox(height: 30),
+          Text("HASIL : $hasil",
+              style:
+                  const TextStyle(fontSize: 28, fontWeight: FontWeight.bold))
+        ]),
+      ),
+    );
   }
 }
