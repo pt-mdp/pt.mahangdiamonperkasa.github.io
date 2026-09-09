@@ -4,7 +4,7 @@ NovaPro is a premium, highly optimized, and full-featured Flutter application de
 
 ## 🚀 Live Demo on Google Play Store
 Check out the production-ready app directly on Google Play to see the code quality and performance:
-👉 Buy & Try: https://google.com
+👉 Buy & Try:https://play.google.com/store/apps/details?id=com.novarizal.novapromasjid
 
 ## 🌟 Key Features & Capabilities
 - **Multi-Language Support:** Fully localized and ready-to-use in English, Arabic (العربية), and Bahasa Indonesia.
