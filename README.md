@@ -23,7 +23,7 @@ Check out the production-ready app directly on Google Play to see the code quali
 
 ## 💰 Get the Commercial License & Full Source Code:
 Buy the official source code to kickstart your own app business or reskin it for clients worldwide:
-👉 Instant Purchase on Gumroad: https://gumroad.com
+👉 Instant Purchase on Gumroad: https://bajaringan6.gumroad.com/l/htctok
 👉 Instant Purchase on SellAnyCode: https://www.sellanycode.com/item/28007/novapro-offline-mosque-management-prayer-times-flutter-source-code
 
 For custom reskin services,
